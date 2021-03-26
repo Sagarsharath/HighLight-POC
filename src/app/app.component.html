@@ -1,0 +1,248 @@
+<div id ="questionText" (mouseup)="invokeHighlights('view-lecture-article',$event)" (click)="clearHighlight()">
+  Keka
+  UWorld India Private Limited
+  Search
+  Sharath Babu Mahankali
+  <p>qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq</p>
+  <p>ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+  Home
+  Me
+  Inbox
+  My Team
+  My Finances
+  To Do
+  Org
+  DASHBOARD
+  Quick Access
+  Inbox
+  
+  
+  Good job!
+  
+  You have no pending actions
+  
+  Holidays
+  
+  View All
+  Ugadi
+  Tue, 13 April, 2021
+  On Leave Today
+  
+  
+  Everyone working today!
+  
+  None in your team is on leave.
+  
+  Working Remotely
+  
+  
+  Everyone’s at office!
+  
+  None in team is working remotely.
+  
+  Time Today - Mar 25, 2021 Thu
+  CURRENT TIME
+  
+  09:45:33AM
+  View All
+  Leave Balances
+  
+  UNPAID LEAVE
+  
+  WEDDING LEAVE
+  
+  PAID LEAVE
+  
+  View All Balances
+  Apply Leave
+  
+  Lohitha Maripuri made an announcement
+  
+  19 Mar, 2021
+  
+  Wearing Mask is mandate !!
+  
+  Lohitha Maripuri made an announcement
+  
+  17 Mar, 2021
+  
+  Policy Refresher - Employee Referral Bonus Policy
+  Celebrating Birthdays
+  
+  
+  Vineela Ramgopal
+  
+  TODAY
+  
+  
+  Pavani Vemula
+  
+  TODAY
+  
+  Celebrating Work Anniversaries
+  
+  
+  1
+  Kuldeep Prasad
+  
+  APR 13
+  
+  
+  1
+  Satya Kishore Bhamidipati
+  
+  APR 20
+  
+  
+  Lohitha Maripuri made an announcement
+  
+  02 Mar, 2021
+  
+  Tech & Learning Awards of Excellence : UWorld in news !!
+  Link to view the article: https://www.techlearning.com/news/tech-and-learning-names-the-winners-of-the-2021-best-remote-and-blended-learning-tools
+  
+  
+  Lohitha Maripuri made an announcement
+  
+  23 Feb, 2021
+  
+  Policy Refresher - Group Medical Coverage Insurance (GMC) Policy
+  
+
+</div>
+
+<p id ="explanation" (mouseup)="invokeHighlights('view-lecture-article',$event)" (click)="clearHighlight()">
+  Keka
+  UWorld India Private Limited
+  Search
+  Sharath Babu Mahankali
+  
+  Home
+  Me
+  Inbox
+  My Team
+  My Finances
+  To Do
+  Org
+  DASHBOARD
+  Quick Access
+  Inbox
+  
+  
+  Good job!
+  
+  You have no pending actions
+  
+  Holidays
+  
+  View All
+  Ugadi
+  Tue, 13 April, 2021
+  On Leave Today
+  
+  
+  Everyone working today!
+  
+  None in your team is on leave.
+  
+  Working Remotely
+  
+  
+  Everyone’s at office!
+  
+  None in team is working remotely.
+  
+  Time Today - Mar 25, 2021 Thu
+  CURRENT TIME
+  
+  09:45:33AM
+  View All
+  Leave Balances
+  
+  UNPAID LEAVE
+  
+  WEDDING LEAVE
+  
+  PAID LEAVE
+  
+  View All Balances
+  Apply Leave
+  
+  Lohitha Maripuri made an announcement
+  
+  19 Mar, 2021
+  
+  Wearing Mask is mandate !!
+  
+  Lohitha Maripuri made an announcement
+  
+  17 Mar, 2021
+  
+  Policy Refresher - Employee Referral Bonus Policy
+  Celebrating Birthdays
+  
+  
+  Vineela Ramgopal
+  
+  TODAY
+  
+  
+  Pavani Vemula
+  
+  TODAY
+  
+  Celebrating Work Anniversaries
+  
+  
+  1
+  Kuldeep Prasad
+  
+  APR 13
+  
+  
+  1
+  Satya Kishore Bhamidipati
+  
+  APR 20
+  
+  
+  Lohitha Maripuri made an announcement
+  
+  02 Mar, 2021
+  
+  Tech & Learning Awards of Excellence : UWorld in news !!
+  Link to view the article: https://www.techlearning.com/news/tech-and-learning-names-the-winners-of-the-2021-best-remote-and-blended-learning-tools
+  
+  
+  Lohitha Maripuri made an announcement
+  
+  23 Feb, 2021
+  
+  Policy Refresher - Group Medical Coverage Insurance (GMC) Policy
+  
+
+</p>
+
+<div class="contextual-menu" id="contextualMenuSelection" [ngStyle]="{'display' : 'None'}"> 
+   <!-- ng-style="{'top':cmSelectionProperties.top,'left':cmSelectionProperties.left, 'right':cmSelectionProperties.right,'display':cmSelectionProperties.display}"> -->
+  <div>
+      <button disabled class="contextual-menu-highlight-colors">
+         <!-- ng-if="clientConfig.enableMultiColorPicker && testInfo.testModeId != constants.testMode.search && launchTestOptions.topLevelProductId != constants.topLevelProduct.mcat && !(userPreferences.testPreferences.uworldTheme && suggestedHighlightsPreference == 1)"> -->
+          <span class="fa-stack"
+                ng-repeat="option in highlightOptions"
+                ng-show="true"
+                (click)="addHighlight()">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fas fa-circle fa-stack-1x highlight-color-circle-1"></i>
+          </span>
+      </button>
+      <button  class="btn cmMenuBtnNew" (click)="addHighlight()">
+          <i class="fal fa-highlighter"></i>
+          Highlight
+      </button>
+      <button  type="button" class="btn cmMenuBtnNew" ng-click="#">
+          <i class="fal fa-lg fa-book mr-5"></i>
+          <span>Notebook</span>
+      </button>
+  </div>
+</div>
