@@ -22,6 +22,10 @@ export class AppComponent implements AfterViewInit {
         this.checkBeforeDeselect(data.highlightId, data.event);
       }
     });
+    document.addEventListener('click', ($event) => { 
+      if (!this.checkSelection()) {
+      document.getElementById('contextualMenuSelection').style.display= 'none';}
+    })
   }
 
   ngAfterViewInit(){
