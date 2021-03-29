@@ -94,6 +94,8 @@ export class Highlight {
       this.selection(this.state.highlight, this.action.remove);
     }
   }
+
+  // FRQ_POC
   deselect(highlightId) {
 
     // if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
@@ -739,7 +741,7 @@ export class Highlight {
   }
 
   // Use this for multicolor highlights
-  
+  // FRQ_POC
   Selection(highlightColor) {
     /* if (checkIfIE()) {
          return;
@@ -838,7 +840,15 @@ export class Highlight {
     }
 }
 
+
+// FRQ_POC
+LoadHighLightsForM(){
+  this.Select('questionText', 36, 410, this.idx++, 1);
+  this.Select('explanation', 500, 1710, this.idx++, 0);
+}
+
 // use this for multicolor highlights
+// FRQ_POC
 Select(elementId, start, end, highlightId, highlightColor) {
   // var tempQId = $('#currentQuestionIndex').html().trim();
 

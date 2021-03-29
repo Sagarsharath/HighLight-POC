@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Highlight} from '../Highlight'
 import { Subject, Subscription } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
   highlightObj: any;
   highlightOptions = [1, 2, 3, 4, 5];
@@ -22,6 +22,11 @@ export class AppComponent {
         this.checkBeforeDeselect(data.highlightId, data.event);
       }
     });
+  }
+
+  ngAfterViewInit(){
+
+    this.highlightObj.LoadHighLightsForM();
   }
 
   checkBeforeDeselect(highlightId, event) {
