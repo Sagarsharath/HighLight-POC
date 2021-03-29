@@ -17,17 +17,19 @@ export class AppComponent {
     this.highlightObj = new Highlight('Home', this._onHighlightDeselect);
     this.highlightObj.LoadHighlights('Home');
     this.highlightDeselectSubscription = this._onHighlightDeselect.subscribe(data => {
+      console.log(data)
       if (data) {
         this.checkBeforeDeselect(data.highlightId, data.event);
       }
     });
   }
 
-  checkBeforeDeselect (highlightId, event) {
+  checkBeforeDeselect(highlightId, event) {
     this.removeHighlight(highlightId);
   };
 
-  removeHighlight  (highlightId) {
+  removeHighlight (highlightId) {
+    console.log(highlightId)
     this.highlightObj.removeHighlight(highlightId);
     // var article = this.lectureInfo.fileList.find(file => file.typeId === 5);
     // article.highlights = this.highlightObj.GetHighlightsString();
@@ -35,7 +37,6 @@ export class AppComponent {
 
   
   invokeHighlights(container, event): void {
-    console.log('mouse-leave')
     if (this.checkSelection()) {
       document.getElementById('contextualMenuSelection').style.display= 'block'
     }
@@ -56,9 +57,9 @@ export class AppComponent {
     }
   }
 
-  addHighlight() {
+  addHighlight(colorCode?) {
 
-    this.highlightObj.addHighlight();
+    this.highlightObj.addHighlight(colorCode);
     document.getElementById('contextualMenuSelection').style.display= 'none'
     // let article = this.lectureInfo.fileList.find(function (file) { return file.typeId === 5; });
     // article.highlights = this.highlightObj.GetHighlightsString();

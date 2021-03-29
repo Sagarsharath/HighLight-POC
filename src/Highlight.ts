@@ -80,17 +80,58 @@ export class Highlight {
     this.answerStrikeList = null;
   }
 
-  addHighlight() {
-    this.selection(this.state.highlight, this.action.add);
+  addHighlight(color?) {
+    
+    this.Selection(color);
+    // this.selection(this.state.highlight, this.action.add,color);
   }
 
   removeHighlight(highlightId) {
     if (highlightId != null && highlightId != '') {
-      this.deselectHighlight(highlightId, this.state.highlight);
+      // this.deselectHighlight(highlightId, this.state.highlight);
+      this.deselect(highlightId)
     } else {
       this.selection(this.state.highlight, this.action.remove);
     }
   }
+  deselect(highlightId) {
+
+    // if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
+    //     if ($('#vocabularyPopover').css('display') == 'block') {
+    //         $('#vocabularyPopover').css('display', 'none');
+    //     }
+    // }
+
+    var uniqueCssClass = "selection_" + (highlightId);
+    var anchorTags = document.body.getElementsByClassName(uniqueCssClass),
+        anchorTag, parentNode;
+
+    // Convert anchorTags to an array to prevent live updating of the list as we remove the anchorTags
+    anchorTags = Array.prototype.slice.call(anchorTags, 0);
+    for (var i = 0, len = anchorTags.length; i < len; ++i) {
+        anchorTag = anchorTags[i];
+        parentNode = anchorTag.parentNode;
+        var childNodeLen = anchorTag.childNodes.length;
+        var j = 0;
+        while (j < childNodeLen) {
+            var clone = anchorTag.childNodes[j].cloneNode(true);
+            parentNode.insertBefore(clone, anchorTag);
+            j++;
+        }
+        parentNode.removeChild(anchorTag);
+
+        // Glue any adjacent text nodes back together
+        parentNode.normalize();
+    }
+    // dirty = 1;
+
+    for (i = 0; i < this.highlightList.length; i++) {
+        if (this.highlightList[i].id == parseInt(highlightId)) {
+          this.highlightList.splice(i, 1);
+            break;
+        }
+    }
+}
 
   //used by mobiles to add or remove using single button
   toggleHighlight() {
@@ -101,7 +142,7 @@ export class Highlight {
     this.selection(this.state.strikeout, null);
   }
 
-  selection(currentState, currentAction) {
+  selection(currentState, currentAction, color?) {
 
     this.parentNodeId = '';
     var text = "";
@@ -209,7 +250,7 @@ export class Highlight {
     if (currentAction == this.action.remove)
       this.highlightList = this.processRemoveHighlight(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState);
     else if (currentAction == this.action.add)
-      this.highlightList = this.processHighlights(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState);
+      this.highlightList = this.processHighlights(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState,color);
 
 
     this.clearSelection();
@@ -314,7 +355,7 @@ export class Highlight {
   };
 
   //Processes Range data to handle any highlight overlaps or removals
-  processHighlights(highlightId, ele, start, end, highlightList, currentState) {
+  processHighlights(highlightId, ele, start, end, highlightList, currentState,color?) {
 
 
 
@@ -361,7 +402,7 @@ export class Highlight {
 
     this.clearHighlights();
     for (var j = 0; j < highlightList.length; j++) {
-      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState);
+      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState,color);
     }
 
     return highlightList;
@@ -600,11 +641,13 @@ export class Highlight {
     return stack.concat(concatList);
   }
 
-  select(highlightId, elementId, start, end, currentState) {
+  select(highlightId, elementId, start, end, currentState,color?) {
     //var uniqueCssClass = "selection_" + (highlightId);
 
     var elementObj = document.getElementById(elementId);
-    if (!elementObj) {
+    
+    console.log(elementObj)
+    if (!elementObj) {    
       return;
     }
 
@@ -667,11 +710,13 @@ export class Highlight {
       textNode = selectedTextNodes[i];
 
       //if (textNode.length > 0) {
-
       if (currentState == this.state.highlight) {
         if (textNode.textContent.trim() !== "") {
+          console.log(textNode)
           anchorTag = document.createElement("h-tag");
-          anchorTag.className = "textHighlight custom-color-1"; // TODO : this class can be provided by consumer.
+          let colorClass= ''
+          if(color) colorClass = 'custom-color-'+color;
+          anchorTag.className = "textHighlight " + colorClass; // TODO : this class can be provided by consumer.
           //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
           (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
           textNode.parentNode.insertBefore(anchorTag, textNode);
@@ -693,7 +738,229 @@ export class Highlight {
     this.clearSelection();
   }
 
-  setSelectionRange(el, start, end) {
+  // Use this for multicolor highlights
+  
+  Selection(highlightColor) {
+    /* if (checkIfIE()) {
+         return;
+     }*/
+    if (window.getSelection().toString() !== "") {
+        if (this.highlightList.length > 5000) {// this.highlightMaxLimit) {
+            // angular.element($("#container")).scope().showHighlightLimitMessage();
+            return;
+        }
+
+        var sel = window.getSelection();
+        this.sel[0] = sel;
+        if (this.sel !== null && this.sel.length < 1) {
+          return;
+        }
+
+      var range = sel.getRangeAt(0);
+
+      var duplicate_range = range;
+      var startNode: any = range.startContainer, endNode: any = sel.focusNode;
+
+        // var range = sel.getRangeAt(0);
+        // var duplicate_range = range;
+        // var startNode = range.startContainer, endNode = range.endContainer;
+        // var startNode = range.startContainer, endNode = sel.focusNode;//endNode = range.endContainer;
+        var selEndOffset = sel.focusOffset;
+        //console.log( "focus offset" + sel.focusOffset );
+        //console.log( "range" );
+        //console.log( "start node"+startNode.nodeName+"end node id"+endNode.nodeName);
+        //console.log( "end" + selEndOffset + "start" + range.startOffset );
+
+        if (startNode.nodeValue == endNode.nodeValue ){ //|| ($scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.mcat && $scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.collegeprep)) {
+
+            endNode = range.endContainer;
+            selEndOffset = range.endOffset;
+
+        }
+        if (endNode.nodeName == 'SPAN' && selEndOffset == 0) {
+            endNode = this.getLastTextNodesBetween(sel);
+            selEndOffset = endNode.nodeValue.length;
+        }
+        if (startNode.nodeName == 'SPAN' && range.startOffset == 0) {
+            // startNode = getFirstTextNodesBetween( sel );
+            var _textNode = this.getFirstTextNodesBetween(sel);
+            if (_textNode != null) {
+                startNode = _textNode;
+                // range.startOffset = 0;
+            }
+            //selEndOffset = endNode.nodeValue.length;
+        }
+        //  console.log('range compare :' + range.comparePoint(endNode, sel.focusOffset));
+        // Split the start and end container text nodes, if necessary
+
+        if (endNode.nodeType == 3) {
+            // endNode.splitText(range.endOffset);
+            endNode.splitText(selEndOffset);
+            range.setEnd(endNode, endNode.length);
+        }
+
+        if (startNode.nodeType == 3) {
+            startNode = startNode.splitText(range.startOffset);
+            range.setStart(startNode, 0);
+        }
+
+        // Create an array of all the text nodes in the selection using a TreeWalker
+        var containerElement = range.commonAncestorContainer;
+        if (containerElement.nodeType != 1) {
+            containerElement = containerElement.parentNode;
+        }
+
+        if (this.findParentNodeId(containerElement) === null) {
+
+            alert("Invalid highlight. Please highlight phrase/text within question or explanation. If you are trying to highlight a whole paragraph, please try the selection again by moving the selection boundaries.");
+            return;
+
+        }
+
+        this.getCharacterCount(duplicate_range, this.parentNodeId);
+
+        var tempStartPoint = this.startOffset - 1;
+
+
+        var tempEndPoint = this.endOffset - 1;
+        if (tempStartPoint < 0) {
+            tempStartPoint = 0;
+        }
+        if (tempEndPoint < 0) {
+            tempEndPoint = 0;
+        }
+        this.mouseSelection = true;
+
+      this.Select(this.parentNodeId, tempStartPoint, tempEndPoint, this.idx++, highlightColor);
+
+        // dirty = 1;
+        // highlightSuccess = true;
+    }
+}
+
+// use this for multicolor highlights
+Select(elementId, start, end, highlightId, highlightColor) {
+  // var tempQId = $('#currentQuestionIndex').html().trim();
+
+
+  // if (tempQId != currentQId)
+  //     return;
+ 
+
+  if (true) {
+
+
+      var uniqueCssClass = "selection_" + (highlightId);
+      this.setSelectionRange(document.getElementById(elementId), start, end);
+
+      if (this.sel !== null && this.sel.length < 1) {
+          return;
+      }
+
+      var range = this.sel[0];
+
+      var startNode = range.startContainer, endNode = range.endContainer;
+
+      // Split the start and end container text nodes, if necessary
+      if (endNode.nodeType == 3) {
+          endNode.splitText(range.endOffset);
+          range.setEnd(endNode, endNode.length);
+      }
+
+      if (startNode.nodeType == 3) {
+          //alert(startNode.textContent + ' '  + range.startOffset);
+          startNode = startNode.splitText(range.startOffset);
+          range.setStart(startNode, 0);
+
+      }
+
+      // Create an array of all the text nodes in the selection using a TreeWalker
+      var containerElement = range.commonAncestorContainer;
+      if (containerElement.nodeType != 1) {
+          containerElement = containerElement.parentNode;
+      }
+
+
+      var treeWalker = document.createTreeWalker(
+          containerElement,
+          NodeFilter.SHOW_TEXT,
+          // Note that Range.intersectsNode is non-standard but implemented in WebKit
+           (((node: any) => (this.rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT)) as any), false
+          // function (node) {
+
+          //     return rangeIntersectsNode(range, node) ?
+          //         NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          // },
+          // false
+      );
+
+      var selectedTextNodes = [];
+      while (treeWalker.nextNode()) {
+
+          selectedTextNodes.push(treeWalker.currentNode);
+      }
+
+      var textNode, anchorTag;
+
+      var startVal = 0;
+
+      //hack for IE - detect mouse selection 
+      if (this.checkIfIE() && this.mouseSelection) {
+          startVal = 1;
+          this.mouseSelection = false;
+      }
+
+      // Place each text node within range inside a <a> element with the desired class
+      for (var i = startVal, len = selectedTextNodes.length; i < len; ++i) {
+          textNode = selectedTextNodes[i];
+
+          //if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
+              if (textNode.textContent.trim() !== "") {
+                  anchorTag = document.createElement("a");
+                  var cname = "textHighlight" + " " + uniqueCssClass;
+                  if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
+                  anchorTag.className = cname;
+                  
+
+                  anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+                  textNode.parentNode.insertBefore(anchorTag, textNode);
+                  anchorTag.appendChild(textNode);(anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+              }
+          /*} else {
+              if (textNode.textContent.trim() !== "") {
+                  anchorTag = document.createElement("a");
+                  anchorTag.className = "textHighlight" + " " + uniqueCssClass;
+                  anchorTag.setAttribute('href', 'javascript:deselect(' + highlightId + ')');
+                  textNode.parentNode.insertBefore(anchorTag, textNode);
+                  anchorTag.appendChild(textNode);
+              }
+          }*/
+      }
+
+      var _hobj = { id: highlightId, typeid: this.getElementTypeId(elementId), startid: start, endid: end , highlightcolor : ''};
+      if (highlightColor) _hobj.highlightcolor = highlightColor;
+      this.highlightList.push(_hobj);
+
+      this.clearSelection();
+  }
+}
+
+getElementTypeId(elementId) {
+  var type ;
+
+  if (elementId == 'questionText')
+      type = 0;   
+  else if (elementId == 'explanation')
+      type = -1;
+  else if (elementId == 'questionAbstract')
+      type = -2;
+
+  return type;
+}
+
+
+
+    setSelectionRange(el, start, end) {
     if (document.createRange && window.getSelection) {
 
       var range = document.createRange();

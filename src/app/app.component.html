@@ -125,16 +125,15 @@ Accessibility Support
 <div class="contextual-menu" id="contextualMenuSelection" [ngStyle]="{'display' : 'None'}"> 
    <!-- ng-style="{'top':cmSelectionProperties.top,'left':cmSelectionProperties.left, 'right':cmSelectionProperties.right,'display':cmSelectionProperties.display}"> -->
   <div>
-      <button disabled class="contextual-menu-highlight-colors">
-         <!-- ng-if="clientConfig.enableMultiColorPicker && testInfo.testModeId != constants.testMode.search && launchTestOptions.topLevelProductId != constants.topLevelProduct.mcat && !(userPreferences.testPreferences.uworldTheme && suggestedHighlightsPreference == 1)"> -->
-          <span class="fa-stack"
-                ng-repeat="option in highlightOptions"
-                ng-show="true"
-                (click)="addHighlight()">
-              <i class="fas fa-circle fa-stack-2x"></i>
-              <i class="fas fa-circle fa-stack-1x highlight-color-circle-1"></i>
-          </span>
-      </button>
+      
+    <button  class="btn cmMenuBtnNew" (click)="addHighlight(1)">
+      <i class="fal fa-highlighter"></i>
+      Red
+  </button>
+  <button  class="btn cmMenuBtnNew" (click)="addHighlight(2)">
+      <i class="fal fa-highlighter"></i>
+      Green
+  </button>
       <button  class="btn cmMenuBtnNew" (click)="addHighlight()">
           <i class="fal fa-highlighter"></i>
           Highlight

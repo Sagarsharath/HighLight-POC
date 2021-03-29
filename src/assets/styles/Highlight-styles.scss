@@ -1,14 +1,17 @@
-h-tag.textHighlight {
+.textHighlight {
     background-color: yellow;
     text-decoration: none;
     color: inherit !important;
     font-weight: inherit;   
-    &.custom-color-1{
+    &.highlight-color-1{
+        background-color: red;
+    }  
+    &.highlight-color-2{
         background-color: green;
     }
 }
 
-h-tag.textHighlight:hover {
+.textHighlight:hover {
     cursor: pointer;
 }
 
