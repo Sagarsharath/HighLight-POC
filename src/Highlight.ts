@@ -81,7 +81,7 @@ export class Highlight {
   }
 
   addHighlight(color?) {
-    
+
     this.Selection(color);
     // this.selection(this.state.highlight, this.action.add,color);
   }
@@ -106,34 +106,34 @@ export class Highlight {
 
     var uniqueCssClass = "selection_" + (highlightId);
     var anchorTags = document.body.getElementsByClassName(uniqueCssClass),
-        anchorTag, parentNode;
+      anchorTag, parentNode;
 
     // Convert anchorTags to an array to prevent live updating of the list as we remove the anchorTags
     anchorTags = Array.prototype.slice.call(anchorTags, 0);
     for (var i = 0, len = anchorTags.length; i < len; ++i) {
-        anchorTag = anchorTags[i];
-        parentNode = anchorTag.parentNode;
-        var childNodeLen = anchorTag.childNodes.length;
-        var j = 0;
-        while (j < childNodeLen) {
-            var clone = anchorTag.childNodes[j].cloneNode(true);
-            parentNode.insertBefore(clone, anchorTag);
-            j++;
-        }
-        parentNode.removeChild(anchorTag);
+      anchorTag = anchorTags[i];
+      parentNode = anchorTag.parentNode;
+      var childNodeLen = anchorTag.childNodes.length;
+      var j = 0;
+      while (j < childNodeLen) {
+        var clone = anchorTag.childNodes[j].cloneNode(true);
+        parentNode.insertBefore(clone, anchorTag);
+        j++;
+      }
+      parentNode.removeChild(anchorTag);
 
-        // Glue any adjacent text nodes back together
-        parentNode.normalize();
+      // Glue any adjacent text nodes back together
+      parentNode.normalize();
     }
     // dirty = 1;
 
     for (i = 0; i < this.highlightList.length; i++) {
-        if (this.highlightList[i].id == parseInt(highlightId)) {
-          this.highlightList.splice(i, 1);
-            break;
-        }
+      if (this.highlightList[i].id == parseInt(highlightId)) {
+        this.highlightList.splice(i, 1);
+        break;
+      }
     }
-}
+  }
 
   //used by mobiles to add or remove using single button
   toggleHighlight() {
@@ -252,7 +252,7 @@ export class Highlight {
     if (currentAction == this.action.remove)
       this.highlightList = this.processRemoveHighlight(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState);
     else if (currentAction == this.action.add)
-      this.highlightList = this.processHighlights(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState,color);
+      this.highlightList = this.processHighlights(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState, color);
 
 
     this.clearSelection();
@@ -357,7 +357,7 @@ export class Highlight {
   };
 
   //Processes Range data to handle any highlight overlaps or removals
-  processHighlights(highlightId, ele, start, end, highlightList, currentState,color?) {
+  processHighlights(highlightId, ele, start, end, highlightList, currentState, color?) {
 
 
 
@@ -404,7 +404,7 @@ export class Highlight {
 
     this.clearHighlights();
     for (var j = 0; j < highlightList.length; j++) {
-      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState,color);
+      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState, color);
     }
 
     return highlightList;
@@ -643,13 +643,13 @@ export class Highlight {
     return stack.concat(concatList);
   }
 
-  select(highlightId, elementId, start, end, currentState,color?) {
+  select(highlightId, elementId, start, end, currentState, color?) {
     //var uniqueCssClass = "selection_" + (highlightId);
 
     var elementObj = document.getElementById(elementId);
-    
+
     console.log(elementObj)
-    if (!elementObj) {    
+    if (!elementObj) {
       return;
     }
 
@@ -716,8 +716,8 @@ export class Highlight {
         if (textNode.textContent.trim() !== "") {
           console.log(textNode)
           anchorTag = document.createElement("h-tag");
-          let colorClass= ''
-          if(color) colorClass = 'custom-color-'+color;
+          let colorClass = ''
+          if (color) colorClass = 'custom-color-' + color;
           anchorTag.className = "textHighlight " + colorClass; // TODO : this class can be provided by consumer.
           //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
           (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
@@ -747,124 +747,124 @@ export class Highlight {
          return;
      }*/
     if (window.getSelection().toString() !== "") {
-        if (this.highlightList.length > 5000) {// this.highlightMaxLimit) {
-            // angular.element($("#container")).scope().showHighlightLimitMessage();
-            return;
-        }
+      if (this.highlightList.length > 5000) {// this.highlightMaxLimit) {
+        // angular.element($("#container")).scope().showHighlightLimitMessage();
+        return;
+      }
 
-        var sel = window.getSelection();
-        this.sel[0] = sel;
-        if (this.sel !== null && this.sel.length < 1) {
-          return;
-        }
+      var sel = window.getSelection();
+      this.sel[0] = sel;
+      if (this.sel !== null && this.sel.length < 1) {
+        return;
+      }
 
       var range = sel.getRangeAt(0);
 
       var duplicate_range = range;
       var startNode: any = range.startContainer, endNode: any = sel.focusNode;
 
-        // var range = sel.getRangeAt(0);
-        // var duplicate_range = range;
-        // var startNode = range.startContainer, endNode = range.endContainer;
-        // var startNode = range.startContainer, endNode = sel.focusNode;//endNode = range.endContainer;
-        var selEndOffset = sel.focusOffset;
-        //console.log( "focus offset" + sel.focusOffset );
-        //console.log( "range" );
-        //console.log( "start node"+startNode.nodeName+"end node id"+endNode.nodeName);
-        //console.log( "end" + selEndOffset + "start" + range.startOffset );
+      // var range = sel.getRangeAt(0);
+      // var duplicate_range = range;
+      // var startNode = range.startContainer, endNode = range.endContainer;
+      // var startNode = range.startContainer, endNode = sel.focusNode;//endNode = range.endContainer;
+      var selEndOffset = sel.focusOffset;
+      //console.log( "focus offset" + sel.focusOffset );
+      //console.log( "range" );
+      //console.log( "start node"+startNode.nodeName+"end node id"+endNode.nodeName);
+      //console.log( "end" + selEndOffset + "start" + range.startOffset );
 
-        if (startNode.nodeValue == endNode.nodeValue ){ //|| ($scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.mcat && $scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.collegeprep)) {
+      if (startNode.nodeValue == endNode.nodeValue) { //|| ($scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.mcat && $scope.globalConstants.topLevelProductId != $scope.clientConstants.topLevelProduct.collegeprep)) {
 
-            endNode = range.endContainer;
-            selEndOffset = range.endOffset;
+        endNode = range.endContainer;
+        selEndOffset = range.endOffset;
 
+      }
+      if (endNode.nodeName == 'SPAN' && selEndOffset == 0) {
+        endNode = this.getLastTextNodesBetween(sel);
+        selEndOffset = endNode.nodeValue.length;
+      }
+      if (startNode.nodeName == 'SPAN' && range.startOffset == 0) {
+        // startNode = getFirstTextNodesBetween( sel );
+        var _textNode = this.getFirstTextNodesBetween(sel);
+        if (_textNode != null) {
+          startNode = _textNode;
+          // range.startOffset = 0;
         }
-        if (endNode.nodeName == 'SPAN' && selEndOffset == 0) {
-            endNode = this.getLastTextNodesBetween(sel);
-            selEndOffset = endNode.nodeValue.length;
-        }
-        if (startNode.nodeName == 'SPAN' && range.startOffset == 0) {
-            // startNode = getFirstTextNodesBetween( sel );
-            var _textNode = this.getFirstTextNodesBetween(sel);
-            if (_textNode != null) {
-                startNode = _textNode;
-                // range.startOffset = 0;
-            }
-            //selEndOffset = endNode.nodeValue.length;
-        }
-        //  console.log('range compare :' + range.comparePoint(endNode, sel.focusOffset));
-        // Split the start and end container text nodes, if necessary
+        //selEndOffset = endNode.nodeValue.length;
+      }
+      //  console.log('range compare :' + range.comparePoint(endNode, sel.focusOffset));
+      // Split the start and end container text nodes, if necessary
 
-        if (endNode.nodeType == 3) {
-            // endNode.splitText(range.endOffset);
-            endNode.splitText(selEndOffset);
-            range.setEnd(endNode, endNode.length);
-        }
+      if (endNode.nodeType == 3) {
+        // endNode.splitText(range.endOffset);
+        endNode.splitText(selEndOffset);
+        range.setEnd(endNode, endNode.length);
+      }
 
-        if (startNode.nodeType == 3) {
-            startNode = startNode.splitText(range.startOffset);
-            range.setStart(startNode, 0);
-        }
+      if (startNode.nodeType == 3) {
+        startNode = startNode.splitText(range.startOffset);
+        range.setStart(startNode, 0);
+      }
 
-        // Create an array of all the text nodes in the selection using a TreeWalker
-        var containerElement = range.commonAncestorContainer;
-        if (containerElement.nodeType != 1) {
-            containerElement = containerElement.parentNode;
-        }
+      // Create an array of all the text nodes in the selection using a TreeWalker
+      var containerElement = range.commonAncestorContainer;
+      if (containerElement.nodeType != 1) {
+        containerElement = containerElement.parentNode;
+      }
 
-        if (this.findParentNodeId(containerElement) === null) {
+      if (this.findParentNodeId(containerElement) === null) {
 
-            alert("Invalid highlight. Please highlight phrase/text within question or explanation. If you are trying to highlight a whole paragraph, please try the selection again by moving the selection boundaries.");
-            return;
+        alert("Invalid highlight. Please highlight phrase/text within question or explanation. If you are trying to highlight a whole paragraph, please try the selection again by moving the selection boundaries.");
+        return;
 
-        }
+      }
 
-        this.getCharacterCount(duplicate_range, this.parentNodeId);
+      this.getCharacterCount(duplicate_range, this.parentNodeId);
 
-        var tempStartPoint = this.startOffset - 1;
+      var tempStartPoint = this.startOffset - 1;
 
 
-        var tempEndPoint = this.endOffset - 1;
-        if (tempStartPoint < 0) {
-            tempStartPoint = 0;
-        }
-        if (tempEndPoint < 0) {
-            tempEndPoint = 0;
-        }
-        this.mouseSelection = true;
+      var tempEndPoint = this.endOffset - 1;
+      if (tempStartPoint < 0) {
+        tempStartPoint = 0;
+      }
+      if (tempEndPoint < 0) {
+        tempEndPoint = 0;
+      }
+      this.mouseSelection = true;
 
       this.Select(this.parentNodeId, tempStartPoint, tempEndPoint, this.idx++, highlightColor);
 
-        // dirty = 1;
-        // highlightSuccess = true;
+      // dirty = 1;
+      // highlightSuccess = true;
     }
-}
+  }
 
 
-// FRQ_POC
-LoadHighLightsForM(){
-  this.Select('questionText', 36, 410, this.idx++, 1);
-  this.Select('explanation', 500, 1710, this.idx++, 0);
-}
+  // FRQ_POC
+  LoadHighLightsForM() {
+    this.Select('questionText', 36, 410, this.idx++, 1);
+    this.Select('explanation', 500, 1710, this.idx++, 0);
+  }
 
-// use this for multicolor highlights
-// FRQ_POC
-Select(elementId, start, end, highlightId, highlightColor) {
-  // var tempQId = $('#currentQuestionIndex').html().trim();
+  // use this for multicolor highlights
+  // FRQ_POC
+  Select(elementId, start, end, highlightId, highlightColor) {
+    // var tempQId = $('#currentQuestionIndex').html().trim();
 
 
-  // if (tempQId != currentQId)
-  //     return;
- 
+    // if (tempQId != currentQId)
+    //     return;
 
-  if (true) {
+
+    if (true) {
 
 
       var uniqueCssClass = "selection_" + (highlightId);
       this.setSelectionRange(document.getElementById(elementId), start, end);
 
       if (this.sel !== null && this.sel.length < 1) {
-          return;
+        return;
       }
 
       var range = this.sel[0];
@@ -873,41 +873,41 @@ Select(elementId, start, end, highlightId, highlightColor) {
 
       // Split the start and end container text nodes, if necessary
       if (endNode.nodeType == 3) {
-          endNode.splitText(range.endOffset);
-          range.setEnd(endNode, endNode.length);
+        endNode.splitText(range.endOffset);
+        range.setEnd(endNode, endNode.length);
       }
 
       if (startNode.nodeType == 3) {
-          //alert(startNode.textContent + ' '  + range.startOffset);
-          startNode = startNode.splitText(range.startOffset);
-          range.setStart(startNode, 0);
+        //alert(startNode.textContent + ' '  + range.startOffset);
+        startNode = startNode.splitText(range.startOffset);
+        range.setStart(startNode, 0);
 
       }
 
       // Create an array of all the text nodes in the selection using a TreeWalker
       var containerElement = range.commonAncestorContainer;
       if (containerElement.nodeType != 1) {
-          containerElement = containerElement.parentNode;
+        containerElement = containerElement.parentNode;
       }
 
 
       var treeWalker = document.createTreeWalker(
-          containerElement,
-          NodeFilter.SHOW_TEXT,
-          // Note that Range.intersectsNode is non-standard but implemented in WebKit
-           (((node: any) => (this.rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT)) as any), false
-          // function (node) {
+        containerElement,
+        NodeFilter.SHOW_TEXT,
+        // Note that Range.intersectsNode is non-standard but implemented in WebKit
+        (((node: any) => (this.rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT)) as any), false
+        // function (node) {
 
-          //     return rangeIntersectsNode(range, node) ?
-          //         NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-          // },
-          // false
+        //     return rangeIntersectsNode(range, node) ?
+        //         NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        // },
+        // false
       );
 
       var selectedTextNodes = [];
       while (treeWalker.nextNode()) {
 
-          selectedTextNodes.push(treeWalker.currentNode);
+        selectedTextNodes.push(treeWalker.currentNode);
       }
 
       var textNode, anchorTag;
@@ -916,61 +916,61 @@ Select(elementId, start, end, highlightId, highlightColor) {
 
       //hack for IE - detect mouse selection 
       if (this.checkIfIE() && this.mouseSelection) {
-          startVal = 1;
-          this.mouseSelection = false;
+        startVal = 1;
+        this.mouseSelection = false;
       }
 
       // Place each text node within range inside a <a> element with the desired class
       for (var i = startVal, len = selectedTextNodes.length; i < len; ++i) {
-          textNode = selectedTextNodes[i];
+        textNode = selectedTextNodes[i];
 
-          //if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
-              if (textNode.textContent.trim() !== "") {
-                  anchorTag = document.createElement("a");
-                  var cname = "textHighlight" + " " + uniqueCssClass;
-                  if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
-                  anchorTag.className = cname;
-                  
+        //if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
+        if (textNode.textContent.trim() !== "") {
+          anchorTag = document.createElement("a");
+          var cname = "textHighlight" + " " + uniqueCssClass;
+          if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
+          anchorTag.className = cname;
 
-                  anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
-                  textNode.parentNode.insertBefore(anchorTag, textNode);
-                  anchorTag.appendChild(textNode);(anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
-              }
-          /*} else {
-              if (textNode.textContent.trim() !== "") {
-                  anchorTag = document.createElement("a");
-                  anchorTag.className = "textHighlight" + " " + uniqueCssClass;
-                  anchorTag.setAttribute('href', 'javascript:deselect(' + highlightId + ')');
-                  textNode.parentNode.insertBefore(anchorTag, textNode);
-                  anchorTag.appendChild(textNode);
-              }
-          }*/
+
+          anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+          textNode.parentNode.insertBefore(anchorTag, textNode);
+          anchorTag.appendChild(textNode); (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+        }
+        /*} else {
+            if (textNode.textContent.trim() !== "") {
+                anchorTag = document.createElement("a");
+                anchorTag.className = "textHighlight" + " " + uniqueCssClass;
+                anchorTag.setAttribute('href', 'javascript:deselect(' + highlightId + ')');
+                textNode.parentNode.insertBefore(anchorTag, textNode);
+                anchorTag.appendChild(textNode);
+            }
+        }*/
       }
 
-      var _hobj = { id: highlightId, typeid: this.getElementTypeId(elementId), startid: start, endid: end , highlightcolor : ''};
+      var _hobj = { id: highlightId, typeid: this.getElementTypeId(elementId), startid: start, endid: end, highlightcolor: '' };
       if (highlightColor) _hobj.highlightcolor = highlightColor;
       this.highlightList.push(_hobj);
 
       this.clearSelection();
+    }
   }
-}
 
-getElementTypeId(elementId) {
-  var type ;
+  getElementTypeId(elementId) {
+    var type;
 
-  if (elementId == 'questionText')
-      type = 0;   
-  else if (elementId == 'explanation')
+    if (elementId == 'questionText')
+      type = 0;
+    else if (elementId == 'explanation')
       type = -1;
-  else if (elementId == 'questionAbstract')
+    else if (elementId == 'questionAbstract')
       type = -2;
 
-  return type;
-}
+    return type;
+  }
 
 
 
-    setSelectionRange(el, start, end) {
+  setSelectionRange(el, start, end) {
     if (document.createRange && window.getSelection) {
 
       var range = document.createRange();
@@ -1041,7 +1041,7 @@ getElementTypeId(elementId) {
   }
 
   findParentNodeId(el) {
-console.log(el)
+    console.log(el)
     if (el.id == 'questionText' || el.id == 'explanation' || el.id == 'questionAbstract' || el.id == 'answerChoicesDiv' || el.id == 'view-lecture-article') {
       this.parentNodeId = el.id;
       return el;
@@ -1212,7 +1212,7 @@ console.log(el)
         let blankText = false;
         let _nodeVal = this.trim(this.removeNewLine(node.nodeValue))
         if (_nodeVal == '&nbsp;' || _nodeVal == '') blankText = true;
-        if (this.textFound && !blankText) 
+        if (this.textFound && !blankText)
           textNodes.push(node);
 
         //if (textFound)
