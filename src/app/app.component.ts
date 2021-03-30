@@ -9,7 +9,7 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
-  highlightObj: any;
+  highlightObj: Highlight;
   highlightOptions = [1, 2, 3, 4, 5];
   _onHighlightDeselect = new Subject<{ highlightId: number, event: any }>();
   highlightDeselectSubscription: Subscription;
@@ -70,6 +70,14 @@ export class AppComponent implements AfterViewInit {
 
     this.highlightObj.addHighlight(colorCode);
     document.getElementById('contextualMenuSelection').style.display= 'none'
+    // let article = this.lectureInfo.fileList.find(function (file) { return file.typeId === 5; });
+    // article.highlights = this.highlightObj.GetHighlightsString();
+  }
+
+  addAnnotation(colorCode?) {
+
+    this.highlightObj.addAnnotation(colorCode);
+    document.getElementById('contextualMenuSelection').style.display = 'none'
     // let article = this.lectureInfo.fileList.find(function (file) { return file.typeId === 5; });
     // article.highlights = this.highlightObj.GetHighlightsString();
   }

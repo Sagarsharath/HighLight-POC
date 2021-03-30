@@ -20,8 +20,9 @@ export class Highlight {
   _onHighlightDeselect: Subject<{ highlightId: number, event: any }>;
 
   state = {
-    highlight: 'true',
-    strikeout: 'false'
+    highlight: 'highlight',
+    strikeout: 'strikeout',
+    annotation: 'annotation'
   };
 
   action = {
@@ -81,8 +82,12 @@ export class Highlight {
   }
 
   addHighlight(color?) {
+    this.Selection(this.state.highlight, color);
+    // this.selection(this.state.highlight, this.action.add,color);
+  }
 
-    this.Selection(color);
+  addAnnotation(color?) {
+    this.Selection(this.state.annotation, color);
     // this.selection(this.state.highlight, this.action.add,color);
   }
 
@@ -105,6 +110,7 @@ export class Highlight {
     // }
 
     var uniqueCssClass = "selection_" + (highlightId);
+    highlightId = parseInt(highlightId);
     var anchorTags = document.body.getElementsByClassName(uniqueCssClass),
       anchorTag, parentNode;
 
@@ -113,13 +119,18 @@ export class Highlight {
     for (var i = 0, len = anchorTags.length; i < len; ++i) {
       anchorTag = anchorTags[i];
       parentNode = anchorTag.parentNode;
-      var childNodeLen = anchorTag.childNodes.length;
-      var j = 0;
-      while (j < childNodeLen) {
-        var clone = anchorTag.childNodes[j].cloneNode(true);
-        parentNode.insertBefore(clone, anchorTag);
-        j++;
+      var hInfo = this.highlightList.find(x => x.id == highlightId);
+
+      if (hInfo.state == this.state.highlight) {
+        var childNodeLen = anchorTag.childNodes.length;
+        var j = 0;
+        while (j < childNodeLen) {
+          var clone = anchorTag.childNodes[j].cloneNode(true);
+          parentNode.insertBefore(clone, anchorTag);
+          j++;
+        }
       }
+
       parentNode.removeChild(anchorTag);
 
       // Glue any adjacent text nodes back together
@@ -128,7 +139,7 @@ export class Highlight {
     // dirty = 1;
 
     for (i = 0; i < this.highlightList.length; i++) {
-      if (this.highlightList[i].id == parseInt(highlightId)) {
+      if (this.highlightList[i].id == highlightId) {
         this.highlightList.splice(i, 1);
         break;
       }
@@ -742,7 +753,7 @@ export class Highlight {
 
   // Use this for multicolor highlights
   // FRQ_POC
-  Selection(highlightColor) {
+  Selection(state, highlightColor) {
     /* if (checkIfIE()) {
          return;
      }*/
@@ -833,7 +844,7 @@ export class Highlight {
       }
       this.mouseSelection = true;
 
-      this.Select(this.parentNodeId, tempStartPoint, tempEndPoint, this.idx++, highlightColor);
+      this.Select(this.parentNodeId, tempStartPoint, tempEndPoint, this.idx++, state, highlightColor);
 
       // dirty = 1;
       // highlightSuccess = true;
@@ -843,13 +854,13 @@ export class Highlight {
 
   // FRQ_POC
   LoadHighLightsForM() {
-    this.Select('questionText', 36, 410, this.idx++, 1);
-    this.Select('explanation', 500, 1710, this.idx++, 0);
+    this.Select('questionText', 36, 410, this.idx++, this.state.highlight, 1);
+    this.Select('explanation', 500, 1710, this.idx++, this.state.annotation, 0);
   }
 
   // use this for multicolor highlights
   // FRQ_POC
-  Select(elementId, start, end, highlightId, highlightColor) {
+  Select(elementId, start, end, highlightId, state, highlightColor) {
     // var tempQId = $('#currentQuestionIndex').html().trim();
 
 
@@ -926,15 +937,26 @@ export class Highlight {
 
         //if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
         if (textNode.textContent.trim() !== "") {
-          anchorTag = document.createElement("a");
-          var cname = "textHighlight" + " " + uniqueCssClass;
-          if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
-          anchorTag.className = cname;
-
-
-          anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
-          textNode.parentNode.insertBefore(anchorTag, textNode);
-          anchorTag.appendChild(textNode); (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+          if (state == this.state.highlight) {
+            anchorTag = document.createElement("a");
+            var cname = "textHighlight" + " " + uniqueCssClass;
+            if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
+            anchorTag.className = cname;
+            anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+            textNode.parentNode.insertBefore(anchorTag, textNode);
+            anchorTag.appendChild(textNode); (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+          }
+          else if (state == this.state.annotation) {
+            anchorTag = document.createElement("img-tag");
+            let image = document.createElement("img");
+            anchorTag.className = "selection_" + highlightId;
+            image.setAttribute('src', 'https://www.drupal.org/files/styles/grid-3-2x/public/project-images/font_awesome_logo.png?itok=26GjxSRO');
+            image.setAttribute('style', 'width: 15px;');
+            //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+            (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+            textNode.parentNode.insertBefore(anchorTag, textNode);
+            anchorTag.appendChild(image);
+          }
         }
         /*} else {
             if (textNode.textContent.trim() !== "") {
@@ -947,7 +969,7 @@ export class Highlight {
         }*/
       }
 
-      var _hobj = { id: highlightId, typeid: this.getElementTypeId(elementId), startid: start, endid: end, highlightcolor: '' };
+      var _hobj = { id: highlightId, typeid: this.getElementTypeId(elementId), startid: start, endid: end, highlightcolor: '', state };
       if (highlightColor) _hobj.highlightcolor = highlightColor;
       this.highlightList.push(_hobj);
 
