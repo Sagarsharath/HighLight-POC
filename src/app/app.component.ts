@@ -30,7 +30,7 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(){
 
-    this.highlightObj.LoadHighLightsForM();
+     this.highlightObj.LoadHighLightsForM();
   }
 
   checkBeforeDeselect(highlightId, event) {
@@ -93,4 +93,111 @@ export class AppComponent implements AfterViewInit {
   // cmSelectionProperties.right = '';
     //}
 };
+
+saveHighLights(){
+ let hstr =  this.highlightObj.GetHighLightsList();
+ let requestObj = temp;
+ let i ;
+ hstr.forEach((a,index)=>{
+  requestObj.attributes[index].highlight.color = hstr[index].highlightcolor,
+  requestObj.attributes[index].selectedTextPosition = hstr[index].startid + ',' + hstr[index].endid
+ })
+ console.log(requestObj)
+}
+}
+
+
+let temp = {
+  "testRecordId": 206629837,
+  "Answer_Text":"",
+  "attributes": [
+    {
+      "div_id": "505173",
+      "selectedTextPosition": "643,663",
+      "section": "question",
+      "faculty_id":"121234",
+      "user_type" :"Faculty/Student",
+      "highlight": {
+        "color": "#F89103"
+      },
+      "annotation": {
+        
+        "Rubric_Type":"Thesis | Evidence | Comments",
+        "Text": "This is an annotation on paragraph 1 on question",
+        "Title":"This the title"
+        }
+    },
+    {
+      "div_id": "505173",
+      "selectedTextPosition": "643,663",
+      "section": "question",
+      "faculty_id":"121234",
+      "user_type" :"Faculty/Student",
+      "highlight": {
+        "color": "#F89103"
+      },
+      "annotation": {
+        
+        "Rubric_Type":"Thesis | Evidence | Comments",
+        "Text": "This is an annotation on paragraph 1 on question",
+        "Title":"This the title"
+        }
+    },
+    {
+      "div_id": "505173",
+      "selectedTextPosition": "643,663",
+      "section": "question",
+      "faculty_id":"121234",
+      "user_type" :"Faculty/Student",
+      "highlight": {
+        "color": "#F89103"
+      },
+      "annotation": {
+        
+        "Rubric_Type":"Thesis | Evidence | Comments",
+        "Text": "This is an annotation on paragraph 1 on question",
+        "Title":"This the title"
+        }
+    },
+    {
+      "div_id": "505173",
+      "selectedTextPosition": "643,663",
+      "section": "question",
+      "faculty_id":"121234",
+      "user_type" :"Faculty/Student",
+      "highlight": {
+        "color": "#F89103"
+      },
+      "annotation": {
+        
+        "Rubric_Type":"Thesis | Evidence | Comments",
+        "Text": "This is an annotation on paragraph 1 on question",
+        "Title":"This the title"
+        }
+    },{
+      "div_id": "505173",
+      "selectedTextPosition": "643,663",
+      "section": "question",
+      "faculty_id":"121234",
+      "user_type" :"Faculty/Student",
+      "highlight": {
+        "color": "#F89103"
+      },
+      "annotation": {
+        
+        "Rubric_Type":"Thesis | Evidence | Comments",
+        "Text": "This is an annotation on paragraph 1 on question",
+        "Title":"This the title"
+        }
+    }
+
+],
+  "grading":{
+    "Rubrics":[{
+        "Thesis":"1",
+        "Evidence and Commentry":"4",
+        "Sophistication":"1"
+    }]
+  },
+  "Score":""
 }
