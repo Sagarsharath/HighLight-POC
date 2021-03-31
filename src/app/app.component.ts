@@ -1,6 +1,8 @@
+import { AnnotatorComponent } from './annotator/annotator.component';
 import { AfterViewInit, Component } from '@angular/core';
 import { Highlight} from '../Highlight'
 import { Subject, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +12,11 @@ import { Subject, Subscription } from 'rxjs';
 export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
   highlightObj: Highlight;
+  annotatedCollection: Map<number, string> = new Map<number, string>();
   highlightOptions = [1, 2, 3, 4, 5];
   _onHighlightDeselect = new Subject<{ highlightId: number, event: any }>();
   highlightDeselectSubscription: Subscription;
-  constructor(){
+  constructor(public dialog: MatDialog, ){
     this.highlightObj = new Highlight('Home', this._onHighlightDeselect);
     this.highlightObj.LoadHighlights('Home');
     this.highlightDeselectSubscription = this._onHighlightDeselect.subscribe(data => {
@@ -31,6 +34,50 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(){
 
      this.highlightObj.LoadHighLightsForM();
+  }
+
+  saveSelection() {
+    if (window.getSelection) {
+      let sel = window.getSelection();
+      if (sel.getRangeAt && sel.rangeCount) {
+        return sel.getRangeAt(0);
+      }
+    } else if ((document as any).selection && (document as any).selection.createRange) {
+      return (document as any).selection.createRange();
+    }
+    return null;
+  }
+
+  restoreSelection(range) {
+    if (range) {
+      if (window.getSelection) {
+        let sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } else if ((document as any).selection && range.select) {
+        range.select();
+      }
+    }
+  }
+
+  showAnnotatorDialog(highlightId?) {
+    const dialogRef = this.dialog.open(AnnotatorComponent, {
+      width: "30%",
+      height: "25%",
+      autoFocus: false,
+      disableClose: true,
+      data: this.annotatedCollection.has(highlightId)?this.annotatedCollection.get(highlightId):'',
+      panelClass: 'user-container'
+    });
+
+
+    let saved = this.saveSelection();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.restoreSelection(saved);
+        this.highlightObj.addAnnotation(1);
+      }
+    });
   }
 
   checkBeforeDeselect(highlightId, event) {

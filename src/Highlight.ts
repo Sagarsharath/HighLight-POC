@@ -120,8 +120,11 @@ export class Highlight {
       anchorTag = anchorTags[i];
       parentNode = anchorTag.parentNode;
       var hInfo = this.highlightList.find(x => x.id == highlightId);
-
-      if (hInfo.state == this.state.highlight) {
+      
+      //In case of annotation first anchor tag will be image, second will be highlightElement. So if `i` is `1` then we need to remove highlight
+      var highlightedElement = i == 1;
+      
+      if (hInfo.state == this.state.highlight || highlightedElement) {
         var childNodeLen = anchorTag.childNodes.length;
         var j = 0;
         while (j < childNodeLen) {
@@ -292,7 +295,7 @@ export class Highlight {
     }
   }
 
-  GetHighLightsList(){
+  GetHighLightsList() {
     return this.highlightList;
   }
 
@@ -301,31 +304,31 @@ export class Highlight {
     let i;
 
     for (i = 0; i < this.highlightList.length; i++) {
-        var hobj = this.highlightList[i];
-        if (hobj !== null) {
-            if (h === '') {
-              if (hobj.typeid > 0) {
-                  h = h + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",false," + hobj.typeid;
-                } else {
-                  h = h + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",true," + hobj.typeid;
-                }
+      var hobj = this.highlightList[i];
+      if (hobj !== null) {
+        if (h === '') {
+          if (hobj.typeid > 0) {
+            h = h + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",false," + hobj.typeid;
+          } else {
+            h = h + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",true," + hobj.typeid;
+          }
 
-            } else {
-                if (hobj.typeid > 0) {
-                    h = h + "*" + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",false," + hobj.typeid;
-                } else {
-                    h = h + "*" + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",true," + hobj.typeid;
-                }
-            }
-
-            if (hobj.highlightcolor) {
-              h = h +  "," + hobj.highlightcolor;
-            }
+        } else {
+          if (hobj.typeid > 0) {
+            h = h + "*" + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",false," + hobj.typeid;
+          } else {
+            h = h + "*" + (parseInt(hobj.startid) + 1) + "," + (parseInt(hobj.endid) + 1) + ",true," + hobj.typeid;
+          }
         }
+
+        if (hobj.highlightcolor) {
+          h = h + "," + hobj.highlightcolor;
+        }
+      }
     }
 
     return h;
-}
+  }
 
   // GetHighlightsString() {
   //   var h = '';
@@ -956,7 +959,7 @@ export class Highlight {
         selectedTextNodes.push(treeWalker.currentNode);
       }
 
-      var textNode, anchorTag;
+      var textNode;
 
       var startVal = 0;
 
@@ -973,24 +976,11 @@ export class Highlight {
         //if ($scope.globalConstants.topLevelProductId == $scope.clientConstants.topLevelProduct.collegeprep) {
         if (textNode.textContent.trim() !== "") {
           if (state == this.state.highlight) {
-            anchorTag = document.createElement("a");
-            var cname = "textHighlight" + " " + uniqueCssClass;
-            if (highlightColor) cname = cname + " highlight-color-" + highlightColor;
-            anchorTag.className = cname;
-            anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
-            textNode.parentNode.insertBefore(anchorTag, textNode);
-            anchorTag.appendChild(textNode); (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
+            this.applyHighlight(uniqueCssClass, highlightColor, highlightId, textNode);
           }
           else if (state == this.state.annotation) {
-            anchorTag = document.createElement("img-tag");
-            let image = document.createElement("img");
-            anchorTag.className = "selection_" + highlightId;
-            image.setAttribute('src', 'https://www.drupal.org/files/styles/grid-3-2x/public/project-images/font_awesome_logo.png?itok=26GjxSRO');
-            image.setAttribute('style', 'width: 15px;');
-            //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
-            (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
-            textNode.parentNode.insertBefore(anchorTag, textNode);
-            anchorTag.appendChild(image);
+            this.applyAnnotation(highlightId, textNode);
+            this.applyHighlight(uniqueCssClass, highlightColor, highlightId, textNode);
           }
         }
         /*} else {
@@ -1010,6 +1000,31 @@ export class Highlight {
 
       this.clearSelection();
     }
+  }
+
+  private applyAnnotation(highlightId: any, textNode: any) {
+    let imageTag = document.createElement("img-tag");
+    let image = document.createElement("img");
+    imageTag.className = "selection_" + highlightId;
+    image.setAttribute('src', 'https://www.drupal.org/files/styles/grid-3-2x/public/project-images/font_awesome_logo.png?itok=26GjxSRO');
+    image.setAttribute('style', 'width: 15px;cursor:pointer');
+    //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+    (image as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); });
+    textNode.parentNode.insertBefore(imageTag, textNode);
+    imageTag.appendChild(image);
+  }
+
+  private applyHighlight(uniqueCssClass: string, highlightColor: any, highlightId: any, textNode: any) {
+    let anchorTag = document.createElement("a");
+    var cname = "textHighlight" + " " + uniqueCssClass;
+    if (highlightColor)
+      cname = cname + " highlight-color-" + highlightColor;
+    anchorTag.className = cname;
+    anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
+    textNode.parentNode.insertBefore(anchorTag, textNode);
+    anchorTag.appendChild(textNode);
+    (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); });
+    return cname;
   }
 
   getElementTypeId(elementId) {
