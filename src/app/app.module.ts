@@ -8,11 +8,9 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from "@angular/materia
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { AnnotatorComponent } from './annotator/annotator.component';
 @NgModule({
   declarations: [	
-    AppComponent,
-      AnnotatorComponent
+    AppComponent
    ],
   imports: [
     BrowserModule,

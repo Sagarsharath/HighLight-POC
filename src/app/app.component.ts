@@ -1,4 +1,3 @@
-import { AnnotatorComponent } from './annotator/annotator.component';
 import { AfterViewInit, Component } from '@angular/core';
 import { Highlight} from '../Highlight'
 import { Subject, Subscription } from 'rxjs';
