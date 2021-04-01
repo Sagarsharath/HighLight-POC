@@ -66,7 +66,7 @@ export class AppComponent implements AfterViewInit {
   closeAnnotatorDialog(cancelled:boolean) {
     document.getElementById('annotatorDialog').style.display = 'none'
     if (!cancelled) {
-      //this.restoreSelection(this.saveSelection);
+      this.restoreSelection(this.savedSelection);
       this.highlightObj.addAnnotation(1);
     }
   }
