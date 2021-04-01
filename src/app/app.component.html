@@ -105,6 +105,19 @@
   </div>
 </div>
 
+<div id="annotatorDialog" class="mat-elevation-z8" [ngStyle]="{'display' : 'None','top':'0px'}">
+  <form>
+    <mat-form-field class="example-full-width">
+      <mat-label>Leave a comment</mat-label>
+      <textarea style="height: 75px;" matInput placeholder="Ex. It makes me feel..."></textarea>
+    </mat-form-field>
+    <div>
+      <button type="button" mat-flat-button (click)="closeAnnotatorDialog(true)">Cancel</button>
+      <button type="button" mat-flat-button (click)="closeAnnotatorDialog(false)">Save</button>
+    </div>
+  </form>
+</div>
+
 <div>
   <button (click)="saveHighLights()">Save</button>
 </div>

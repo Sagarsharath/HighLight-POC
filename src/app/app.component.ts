@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
+  menuPosition = { top: '0px', left:'0px', right: '0px' };
   highlightObj: Highlight;
   annotatedCollection: Map<number, string> = new Map<number, string>();
   highlightOptions = [1, 2, 3, 4, 5];
@@ -60,24 +61,33 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  savedSelection: Selection;
+
+  closeAnnotatorDialog(cancelled:boolean) {
+    document.getElementById('annotatorDialog').style.display = 'none'
+    if (!cancelled) {
+      //this.restoreSelection(this.saveSelection);
+      this.highlightObj.addAnnotation(1);
+    }
+  }
+
   showAnnotatorDialog(highlightId?) {
-    const dialogRef = this.dialog.open(AnnotatorComponent, {
-      width: "30%",
-      height: "25%",
-      autoFocus: false,
-      disableClose: true,
-      data: this.annotatedCollection.has(highlightId)?this.annotatedCollection.get(highlightId):'',
-      panelClass: 'user-container'
-    });
-
-
-    let saved = this.saveSelection();
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.restoreSelection(saved);
-        this.highlightObj.addAnnotation(1);
-      }
-    });
+    // var r = window.getSelection().getRangeAt(0).getBoundingClientRect();
+    // var relative = (document.body.parentNode as any).getBoundingClientRect();
+    // // console.log(r.bottom - relative.top) + 'px';//this will place ele below the selection
+    // // console.log(-(r.right - relative.right) + 'px');
+    // let top = r.bottom;
+    //margin/padding between selection and dialog
+    //top += 20;
+    
+    document.getElementById('contextualMenuSelection').style.display='none';
+    let aDialog = document.getElementById('annotatorDialog');
+    
+    aDialog.style.top = this.menuPosition.top;
+    aDialog.style.left = this.menuPosition.left;
+    aDialog.style.right = this.menuPosition.right;
+    aDialog.style.display = 'block'
+    this.savedSelection = this.saveSelection();
   }
 
   checkBeforeDeselect(highlightId, event) {
@@ -91,10 +101,25 @@ export class AppComponent implements AfterViewInit {
     // article.highlights = this.highlightObj.GetHighlightsString();
   }
 
+  setMenuPositions(event) {
+    this.menuPosition.top= (event.pageY + 10) + 'px';
+    if ((document.body.parentNode as any).getBoundingClientRect().width - event.pageX < 400) {
+      this.menuPosition.left = '';
+      this.menuPosition.right = 50 + "px";
+    } else {
+      this.menuPosition.left = (event.pageX - 30) + 'px';
+      this.menuPosition.right = '';
+    }
+  }
   
   invokeHighlights(container, event): void {
     if (this.checkSelection()) {
-      document.getElementById('contextualMenuSelection').style.display= 'block'
+      this.setMenuPositions(event);
+      let elem = document.getElementById('contextualMenuSelection');
+      elem.style.top = this.menuPosition.top;
+      elem.style.left = this.menuPosition.left;
+      elem.style.right = this.menuPosition.right;
+      elem.style.display = 'block';
     }
   }
   checkSelection() {
