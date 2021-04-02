@@ -122,7 +122,8 @@ export class Highlight {
       var hInfo = this.highlightList.find(x => x.id == highlightId);
       
       //In case of annotation first anchor tag will be image, second will be highlightElement. So if `i` is `1` then we need to remove highlight
-      var highlightedElement = i == 1;
+      //In case of multiple annotation/highlight then first anchor tag will be image and further will be highlights
+      var highlightedElement = i >= 1;
       
       if (hInfo.state == this.state.highlight || highlightedElement) {
         var childNodeLen = anchorTag.childNodes.length;
@@ -969,6 +970,7 @@ export class Highlight {
         this.mouseSelection = false;
       }
 
+      let annotationApplied = false;
       // Place each text node within range inside a <a> element with the desired class
       for (var i = startVal, len = selectedTextNodes.length; i < len; ++i) {
         textNode = selectedTextNodes[i];
@@ -979,7 +981,10 @@ export class Highlight {
             this.applyHighlight(uniqueCssClass, highlightColor, highlightId, textNode);
           }
           else if (state == this.state.annotation) {
-            this.applyAnnotation(highlightId, textNode);
+            if (!annotationApplied) {
+              this.applyAnnotation(highlightId, textNode);
+              annotationApplied = !annotationApplied;
+            }
             this.applyHighlight(uniqueCssClass, highlightColor, highlightId, textNode);
           }
         }
