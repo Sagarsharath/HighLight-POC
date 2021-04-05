@@ -419,6 +419,7 @@ export class Highlight {
       hInfo.start = start;
       hInfo.end = end;
       hInfo.currentState = currentState;
+      hInfo.highLightcolor = color;
       highlightList.push(hInfo);
       hInfo = {};
     }
@@ -454,7 +455,7 @@ export class Highlight {
 
     this.clearHighlights();
     for (var j = 0; j < highlightList.length; j++) {
-      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState, color);
+      this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState, highlightList[j].highLightcolor);
     }
 
     return highlightList;
@@ -764,10 +765,9 @@ export class Highlight {
       //if (textNode.length > 0) {
       if (currentState == this.state.highlight) {
         if (textNode.textContent.trim() !== "") {
-          console.log(textNode)
           anchorTag = document.createElement("h-tag");
           let colorClass = ''
-          if (color) colorClass = 'custom-color-' + color;
+          if (color) colorClass = 'highlight-color-' + color;
           anchorTag.className = "textHighlight " + colorClass; // TODO : this class can be provided by consumer.
           //anchorTag.setAttribute('onclick', 'checkBeforeDeselect(' + highlightId + ',event)');
           (anchorTag as HTMLElement).addEventListener('click', ($event) => { this._onHighlightDeselect.next({ highlightId: highlightId, event: $event }); })
