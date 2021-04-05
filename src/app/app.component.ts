@@ -48,6 +48,12 @@ export class AppComponent implements AfterViewInit {
     return null;
   }
 
+
+  stopPro(event: Event) {
+    console.log("Event fired")
+    event.stopPropagation();
+  }
+
   restoreSelection(range) {
     if (range) {
       if (window.getSelection) {
