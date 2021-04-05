@@ -82,8 +82,8 @@ export class Highlight {
   }
 
   addHighlight(color?) {
-    this.Selection(this.state.highlight, color);
-    // this.selection(this.state.highlight, this.action.add,color);
+    // this.Selection(this.state.highlight, color);
+    this.selection(this.state.highlight, this.action.add,color);
   }
 
   addAnnotation(color?) {
@@ -93,8 +93,8 @@ export class Highlight {
 
   removeHighlight(highlightId) {
     if (highlightId != null && highlightId != '') {
-      // this.deselectHighlight(highlightId, this.state.highlight);
-      this.deselect(highlightId)
+      this.deselectHighlight(highlightId, this.state.highlight);
+      // this.deselect(highlightId)
     } else {
       this.selection(this.state.highlight, this.action.remove);
     }
