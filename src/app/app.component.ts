@@ -64,9 +64,13 @@ export class AppComponent implements AfterViewInit {
 
   closeAnnotatorDialog(cancelled:boolean) {
     document.getElementById('annotatorDialog').style.display = 'none'
+    this.highlightObj.removeHighlight(this.lastH.id);
     if (!cancelled) {
-      this.restoreSelection(this.savedSelection);
-      this.highlightObj.addHighlight(1);
+      // this.highlightObj.Select('explanation', 3695, 4000, this.highlightObj.idx++, this.highlightObj.state.annotation, 0);
+      // this.highlightObj.Select(this.lastH.elementDiv, this.lastH.start, this.lastH.end, this.lastH.id, this.highlightObj.state.highlight, 0);
+      this.lastH.highLightcolor = 0;
+      this.highlightObj.highlightList.push(this.lastH);
+      this.highlightObj.select(this.lastH.id, this.lastH.elementDiv, this.lastH.start, this.lastH.end, this.highlightObj.state.highlight, this.lastH.highLightcolor);
     }
   }
 
@@ -86,8 +90,15 @@ export class AppComponent implements AfterViewInit {
     aDialog.style.left = this.menuPosition.left;
     aDialog.style.right = this.menuPosition.right;
     aDialog.style.display = 'block'
-    this.savedSelection = this.saveSelection();
+    //this.savedSelection = this.saveSelection();
+    
+    this.highlightObj.addHighlight(99);
+    var list = this.highlightObj.GetHighLightsList();
+    this.lastH = list[list.length - 1];
+    this.lastH = { ...this.lastH };
   }
+
+  lastH: any;
 
   checkBeforeDeselect(highlightId, event) {
     this.removeHighlight(highlightId);
