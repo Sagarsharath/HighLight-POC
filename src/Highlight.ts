@@ -265,7 +265,7 @@ export class Highlight {
 
 
     if (currentAction == this.action.remove)
-      this.highlightList = this.processRemoveHighlight(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState);
+      this.highlightList = this.processRemoveHighlight(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState,color);
     else if (currentAction == this.action.add)
       this.highlightList = this.processHighlights(highlightId, this.parentNodeId, this.tempStartPoint, this.tempEndPoint, this.highlightList, currentState, color);
 
@@ -462,7 +462,7 @@ export class Highlight {
   }
 
   //Primary function called to remove a highlight
-  processRemoveHighlight(highlightId, ele, start, end, highlightList, currentState) {
+  processRemoveHighlight(highlightId, ele, start, end, highlightList, currentState, color?) {
 
     if (highlightList.length > 0) {
       let hInfo = {} as any;
@@ -471,6 +471,7 @@ export class Highlight {
       hInfo.start = start;
       hInfo.end = end;
       hInfo.currentState = currentState;
+      hInfo.highLightcolor = color;
       //var rInfo = { "id": highlightId, "elementDiv": ele, "start": start, "end": end, "currentState": currentState };
       highlightList.sort(this.compareStart);
 
@@ -482,7 +483,7 @@ export class Highlight {
 
       this.clearHighlights();
       for (var j = 0; j < highlightList.length; j++) {
-        this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState);
+        this.select(highlightList[j].id, highlightList[j].elementDiv, highlightList[j].start, highlightList[j].end, highlightList[j].currentState, highlightList[j].highLightcolor);
       }
     }
 
