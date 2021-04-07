@@ -9,6 +9,10 @@
     &.highlight-color-2{
         background-color: green;
     }
+    &.highlight-color-99 {
+      background-color: #3390ff;
+      color: white !important;
+    }
 }
 
 .textHighlight:hover {
