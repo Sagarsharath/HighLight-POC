@@ -700,7 +700,6 @@ export class Highlight {
 
     var elementObj = document.getElementById(elementId);
 
-    console.log(elementObj)
     if (!elementObj) {
       return;
     }
@@ -1119,7 +1118,6 @@ export class Highlight {
   }
 
   findParentNodeId(el) {
-    console.log(el)
     if (el.id == 'questionText' || el.id == 'explanation' || el.id == 'questionAbstract' || el.id == 'answerChoicesDiv' || el.id == 'view-lecture-article') {
       this.parentNodeId = el.id;
       return el;
