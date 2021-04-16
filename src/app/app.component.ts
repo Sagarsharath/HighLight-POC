@@ -1,4 +1,4 @@
-import { HighlightService } from './HighlightService'
+import { HighlightFactoryService, HighlightService } from './HighlightService'
 import { AfterViewInit, Component } from '@angular/core';
 import { Highlight} from '../Highlight'
 import { Subject, Subscription } from 'rxjs';
@@ -11,9 +11,10 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
-  highlightService: HighlightService = new HighlightService();
+  highlightService: HighlightService;
   
-  constructor(public dialog: MatDialog,) {
+  constructor(public dialog: MatDialog, highlightFactory:HighlightFactoryService) {
+    this.highlightService = highlightFactory.createHighlight();
     this.highlightService.loadHighLights('');
     document.addEventListener('click', ($event) => { 
       if (!this.highlightService.checkSelection()) {

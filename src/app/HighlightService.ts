@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { Highlight } from '../Highlight'
 export interface HighlightInfo{
@@ -20,6 +21,39 @@ export enum SelectionColor{
     Second = 2,
     Third = 3,
     DefaultSelectionColor=99
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class HighlightFactoryService {
+    createHighlight(): HighlightServiceLike {
+        return new HighlightService();
+    }
+}
+
+export interface HighlightServiceLike {
+    highlightObj,
+    menuPosition
+
+    _onHighlightDeselect
+    highlightDeselectSubscription: Subscription;
+    lastHinfo: HighlightInfo;
+
+    loadHighLights(loadString: string);
+    addHighlight(colorCode?);
+    addAnnotation(colorCode?);
+    checkBeforeDeselect(highlightId: number, event);
+    invokeHighlights(container, event);
+    checkSelection();
+    removeHighlight(highlightId: number);
+    setMenuPositions(event);
+    showAnnotatorDialog();
+    closeAnnotatorDialog(cancelled: boolean);
+    getHighlightList(): HighlightInfo[];
+    saveSelection();
+    restoreSelection(range);
+    savedSelection: Selection;
 }
 
 export class HighlightService {
@@ -63,7 +97,7 @@ export class HighlightService {
         this.removeHighlight(highlightId);
     };
 
-    invokeHighlights(container, event): void {
+    invokeHighlights(container, event){
         if (this.checkSelection()) {
             this.setMenuPositions(event);
             let elem = document.getElementById('contextualMenuSelection');

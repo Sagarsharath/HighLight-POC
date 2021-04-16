@@ -1,3 +1,4 @@
+import { HighlightFactoryService } from './HighlightService';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -23,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   providers: [
     { provide: MatDialogRef, useValue: {} },
+    HighlightFactoryService
   ],
   bootstrap: [AppComponent]
 })
