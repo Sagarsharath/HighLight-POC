@@ -273,6 +273,20 @@ export class Highlight {
     this.clearSelection();
   }
 
+  LoadHighlightsFromCollection(savedCollection){
+    let hId = 1000;
+    for (var i = 0; i < savedCollection.length; i++) {
+      var hInfo = savedCollection[i];
+      if(hInfo.id>hId)
+      {
+        hId = hInfo.id;
+      }
+      this.highlightList = this.processHighlights(hInfo.id, hInfo.elementDiv, hInfo.start, hInfo.end, this.highlightList, hInfo.currentState, hInfo.highLightcolor);
+    }
+    this.idx = hId;
+    this.idx++;
+  }
+
   LoadHighlights(loadString) {
     var hInfo = "";
     this.idx = 1000;
@@ -890,12 +904,6 @@ export class Highlight {
     }
   }
 
-
-  // FRQ_POC
-  LoadHighLightsForM() {
-    this.Select('questionText', 36, 410, this.idx++, this.state.highlight, 1);
-    this.Select('explanation', 500, 1710, this.idx++, this.state.annotation, 0);
-  }
 
   // use this for multicolor highlights
   // FRQ_POC

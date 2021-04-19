@@ -15,7 +15,6 @@ export class AppComponent implements AfterViewInit {
   
   constructor(public dialog: MatDialog, highlightFactory:HighlightFactoryService) {
     this.highlightService = highlightFactory.createHighlight();
-    this.highlightService.loadHighLights('');
     document.addEventListener('click', ($event) => { 
       if (!this.highlightService.checkSelection()) {
       document.getElementById('contextualMenuSelection').style.display= 'none';}
@@ -23,32 +22,33 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(){
-
-     this.highlightService.highlightObj.LoadHighLightsForM();
+    console.log(JSON.parse(localStorage.getItem("highlights")));
+    this.highlightService.loadHighlightsFromCollection(JSON.parse(localStorage.getItem("highlights")));
+    //  this.highlightService.highlightObj.LoadHighLightsForM();
   }
   
   clearHighlight(){
     // this.highlightObj.clearHighlights()
   }
 
-  showContextMenu(event, type) {
-    
-  // cmSelectionProperties.top = '';
-  // cmSelectionProperties.left = '';
-  // cmSelectionProperties.right = '';
-    //}
-};
+  // showContextMenu(event, type) {
+
+  //   cmSelectionProperties.top = '';
+  //   cmSelectionProperties.left = '';
+  //   cmSelectionProperties.right = '';
+  // };
 
   saveHighLights() {
-    console.log(this.highlightService.getHighlightList());
-    let hstr = this.highlightService.highlightObj.GetHighLightsList();
-    console.log(hstr);
-    let requestObj = temp;
-    hstr.forEach((a, index) => {
-      requestObj.attributes[index].highlight.color = hstr[index].highlightcolor,
-        requestObj.attributes[index].selectedTextPosition = hstr[index].startid + ',' + hstr[index].endid
-    })
-    console.log(requestObj)
+    // console.log(this.highlightService.getHighlightList());
+    localStorage.setItem("highlights", JSON.stringify(this.highlightService.getHighlightList()));
+    // let hstr = this.highlightService.highlightObj.GetHighLightsList();
+    // console.log(hstr);
+    // let requestObj = temp;
+    // hstr.forEach((a, index) => {
+    //   requestObj.attributes[index].highlight.color = hstr[index].highlightcolor,
+    //     requestObj.attributes[index].selectedTextPosition = hstr[index].startid + ',' + hstr[index].endid
+    // })
+    // console.log(requestObj);
   }
 }
 

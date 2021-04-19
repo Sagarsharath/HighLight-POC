@@ -6,7 +6,7 @@ export interface HighlightInfo{
     elementDiv: string;
     start: number;
     end: number;
-    state: SelectionState,
+    currentState: SelectionState,
     highLightcolor:SelectionColor
 }
 
@@ -17,10 +17,10 @@ export enum SelectionState {
 }
 
 export enum SelectionColor{
-    First = 1,
-    Second = 2,
-    Third = 3,
-    DefaultSelectionColor=99
+    Default="",
+    First = "1",
+    Second = "2",
+    SelectedColor="99"
 }
 
 @Injectable({
@@ -40,7 +40,6 @@ export interface HighlightServiceLike {
     highlightDeselectSubscription: Subscription;
     lastHinfo: HighlightInfo;
 
-    loadHighLights(loadString: string);
     addHighlight(colorCode?);
     addAnnotation(colorCode?);
     checkBeforeDeselect(highlightId: number, event);
@@ -51,12 +50,13 @@ export interface HighlightServiceLike {
     showAnnotatorDialog();
     closeAnnotatorDialog(cancelled: boolean);
     getHighlightList(): HighlightInfo[];
+    loadHighlightsFromCollection(savedCollection: HighlightInfo[]);
     saveSelection();
     restoreSelection(range);
     savedSelection: Selection;
 }
 
-export class HighlightService {
+export class HighlightService implements HighlightServiceLike{
     highlightObj: Highlight;
     menuPosition = { top: '0px', left: '0px', right: '0px' };
 
@@ -65,16 +65,13 @@ export class HighlightService {
     lastHinfo: HighlightInfo;
 
     constructor() {
+        this.highlightObj = new Highlight('', this._onHighlightDeselect);
         this.highlightDeselectSubscription = this._onHighlightDeselect.subscribe(data => {
             console.log(data)
             if (data) {
                 this.checkBeforeDeselect(data.highlightId, data.event);
             }
         });
-    }
-
-    loadHighLights(loadString: string) {
-        this.highlightObj = new Highlight(loadString, this._onHighlightDeselect);
     }
 
     addHighlight(colorCode?) {
@@ -160,7 +157,7 @@ export class HighlightService {
         aDialog.style.display = 'block'
         //this.savedSelection = this.saveSelection();
 
-        this.highlightObj.addHighlight(99);
+        this.highlightObj.addHighlight(SelectionColor.SelectedColor);
         var list = this.highlightObj.GetHighLightsList();
         //Getting latestHinfo which have max id
         this.lastHinfo = list.reduce((a, b) => a.id > b.id ? a : b);
@@ -171,16 +168,17 @@ export class HighlightService {
         document.getElementById('annotatorDialog').style.display = 'none'
         this.highlightObj.removeHighlight(this.lastHinfo.id);
         if (!cancelled) {
-            // this.highlightObj.Select('explanation', 3695, 4000, this.highlightObj.idx++, this.highlightObj.state.annotation, 0);
-            // this.highlightObj.Select(this.lastH.elementDiv, this.lastH.start, this.lastH.end, this.lastH.id, this.highlightObj.state.highlight, 0);
-            this.lastHinfo.highLightcolor = 0;
-            this.highlightObj.highlightList.push(this.lastHinfo);
-            this.highlightObj.select(this.lastHinfo.id, this.lastHinfo.elementDiv, this.lastHinfo.start, this.lastHinfo.end, this.highlightObj.state.highlight, this.lastHinfo.highLightcolor);
+            this.lastHinfo.highLightcolor = SelectionColor.Default;
+            this.highlightObj.processHighlights(this.lastHinfo.id, this.lastHinfo.elementDiv, this.lastHinfo.start, this.lastHinfo.end, this.highlightObj.highlightList, this.highlightObj.state.highlight, this.lastHinfo.highLightcolor);
         }
     }
 
     getHighlightList() : HighlightInfo[]{
         return this.highlightObj.GetHighLightsList();
+    }
+
+    loadHighlightsFromCollection(savedCollection:HighlightInfo[]) {
+        this.highlightObj.LoadHighlightsFromCollection(savedCollection);
     }
 
     //Below Code is not in use. Kept for reference
