@@ -1,4 +1,4 @@
-<div id="questionText" (mouseup)="highlightService.invokeHighlights('view-lecture-article',$event)" (click)="clearHighlight()">
+<div id="questionText" (mouseup)="highlightService.showContextMenu($event)" (click)="clearHighlight()">
   <p> Isaac Newton was born on January 4, 1643, in Woolsthorpe, Lincolnshire, England. The son of a farmer who died
     three months before he was born, Newton spent most of his early years with his maternal grandmother after his mother
     remarried. His education was interrupted by a failed attempt to turn him into a farmer, and he attended the King’s
@@ -23,7 +23,7 @@
   </p>
 </div>
 
-<p id="explanation" (mouseup)="highlightService.invokeHighlights('view-lecture-article',$event)" (click)="clearHighlight()">
+<p id="explanation" (mouseup)="highlightService.showContextMenu($event)" (click)="clearHighlight()">
   Newton returned to Cambridge in 1667 and was elected a minor fellow. He constructed the first reflecting telescope in
   1668, and the following year he received his Master of Arts degree and took over as Cambridge’s Lucasian Professor of
   Mathematics. Asked to give a demonstration of his telescope to the Royal Society of London in 1671, he was elected to
@@ -86,11 +86,11 @@
   <!-- ng-style="{'top':cmSelectionProperties.top,'left':cmSelectionProperties.left, 'right':cmSelectionProperties.right,'display':cmSelectionProperties.display}"> -->
   <div>
 
-    <button class="btn cmMenuBtnNew" (click)="highlightService.addHighlight(1)">
+    <button class="btn cmMenuBtnNew" (click)="highlightService.addHighlight(selectionColorType.First)">
       <i class="fal fa-highlighter"></i>
       Red
     </button>
-    <button class="btn cmMenuBtnNew" (click)="highlightService.addHighlight(2)">
+    <button class="btn cmMenuBtnNew" (click)="highlightService.addHighlight(selectionColorType.Second)">
       <i class="fal fa-highlighter"></i>
       Green
     </button>
@@ -98,7 +98,7 @@
       <i class="fal fa-highlighter"></i>
       Highlight
     </button>
-    <button class="btn cmMenuBtnNew" (click)="highlightService.showAnnotatorDialog()">
+    <button class="btn cmMenuBtnNew" (click)="highlightService.showAnnotatorDialog(0)">
       <i class="fal fa-highlighter"></i>
       Annotation
     </button>

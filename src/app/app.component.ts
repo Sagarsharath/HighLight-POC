@@ -1,4 +1,4 @@
-import { HighlightFactoryService, HighlightService } from './HighlightService'
+import { HighlightFactoryService, HighlightService, SelectionColor } from './HighlightService'
 import { AfterViewInit, Component } from '@angular/core';
 import { Highlight} from '../Highlight'
 import { Subject, Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class AppComponent implements AfterViewInit {
   title = 'HighLight-POC';
   highlightService: HighlightService;
+  selectionColorType: typeof SelectionColor = SelectionColor;
   
   constructor(public dialog: MatDialog, highlightFactory:HighlightFactoryService) {
     this.highlightService = highlightFactory.createHighlight();
